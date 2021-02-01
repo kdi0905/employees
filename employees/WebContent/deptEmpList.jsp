@@ -6,24 +6,39 @@
 <head>
 <meta charset="UTF-8">
 <title>dept_emp</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<style type="text/css">
+body{
+	background-color: #EAEAEA;
+}
+thead{
+	background-color: #747474;
+}
+</style>
 </head>
 <body>
 	<!-- 메뉴 -->
-	<div>
-		<table border="1">
-			<tr>
-				<td><a href="./index.jsp">홈으로</a></td>
-				<td><a href="./departmentsList.jsp">departments 테이블 목록</a></td>
-				<td><a href="./deptEmpList.jsp">dept_emp 테이블 목록</a></td>
-				<td><a href="./deptManagerList.jsp">dept_manager 테이블 목록</a></td>
-				<td><a href="./employeesList.jsp">employees 테이블 목록</a></td>
-				<td><a href="./salariesList.jsp">salaries 테이블 목록</a></td>
-				<td><a href="./titlesList.jsp">titles 테이블 목록</a></td>
-			</tr>
-		</table>
-	</div>
+	<div class="container">
+		<div class= "row" style="margin-top: 20px;">
+			<div class="col-3">
+				<h1>employees</h1>
+			</div>
+			<div class="col-9">
+				<table class="table table-borderless text-center">
+					<tr>
+						<td><a class="btn btn-outline-secondary" href="./index.jsp">home</a></td>
+						<td><a class="btn btn-outline-secondary" href="./departmentsList.jsp">departments</a></td>
+						<td><a class="btn btn-outline-secondary" href="./deptEmpList.jsp">dept_emp</a></td>
+						<td><a class="btn btn-outline-secondary" href="./deptManagerList.jsp">dept_manager</a></td>
+						<td><a class="btn btn-outline-secondary" href="./employeesList.jsp">employees</a></td>
+						<td><a class="btn btn-outline-secondary" href="./salariesList.jsp">salaries</a></td>
+						<td><a class="btn btn-outline-secondary" href="./titlesList.jsp">titles</a></td>
+					</tr>
+				</table>
+			</div>
+		</div>
 	<!-- dept_emp 테이블 목록 -->
-	<h1>dept_emp 테이블 목록</h1>
+	<div class="text-center" style="font-size: 30px;"><h1>dept_emp 테이블 목록</h1></div>
 	<%
 		//페이지 번호
 	request.setCharacterEncoding("UTF-8");
@@ -48,7 +63,7 @@
 	Class.forName("org.mariadb.jdbc.Driver");
 
 	//2. mariadb접속(주소+포트번호+db이름,DB계정,DB계정암호)
-	Connection conn = DriverManager.getConnection("jdbc:mariadb://127.0.0.1:3306/employees", "root", "java1004");
+	Connection conn = DriverManager.getConnection("jdbc:mariadb://kdi0905.kro.kr/employees", "root", "java1004");
 	System.out.println(conn + "<-conn");
 
 	//3. conn안에 쿼리(sql)를 만든다
@@ -133,13 +148,13 @@
 	ResultSet rs = stmt.executeQuery();
 
 	%>
-	<table border="1">
+	<table class="table table-bordered table-hover table-striped text-center ">
 		<thead>
 			<tr>
-				<td>emp_no</td>
-				<td>dept_no</td>
-				<td>from_date</td>
-				<td>to_date</td>
+				<td class="text-light">emp_no</td>
+				<td class="text-light">dept_no</td>
+				<td class="text-light">from_date</td>
+				<td class="text-light">to_date</td>
 			</tr>
 		</thead>
 		<tbody>
@@ -157,41 +172,44 @@
 			%>
 		</tbody>
 	</table>
-	<form method="post" action="./deptEmpList.jsp">
-		<%
-			if (check.equals("yes")) {
-		%>
-		<input type="checkbox" name="check" value="yes" checked="checked">재직
-		중
-		<%
-			} else {
-		%><input type="checkbox" name="check" value="yes" >재직 중<%
-			}
-		%>
-		<select name="deptNo">
-
-			<option value="선택안함">선택안함</option>
-			<%
-				while (search.next()) {
-				if (deptNo.equals(search.getString("dept_no"))) {
-			%>
-
-			<option value='<%=search.getString("dept_no")%>' selected="selected"><%=search.getString("dept_no")%>
-			</option>
-			<%
-				} else {
-			%><option value='<%=search.getString("dept_no")%>'><%=search.getString("dept_no")%>
-			</option>
-			<%
-				}
-			}
-			%>
-		</select>
-
-		<button type="submit">검색</button>
-	</form>
-
-
+	<div class="text-center col-6" style="margin: auto;">
+		<form method="post" action="./deptEmpList.jsp">
+			<div class="input-group" >
+				<%
+					if (check.equals("yes")) {
+				%>
+				<input type="checkbox" name="check" value="yes" checked="checked">재직 중
+				<%
+					} else {
+				%><input type="checkbox" name="check" value="yes" ><span style="font-size: 20px;">재직 중</span> <%
+					}
+				%>
+				<select class="form-control" name="deptNo">
+		
+					<option  value="선택안함">선택안함</option>
+					<%
+						while (search.next()) {
+						if (deptNo.equals(search.getString("dept_no"))) {
+					%>
+		
+					<option value='<%=search.getString("dept_no")%>' selected="selected"><%=search.getString("dept_no")%>
+					</option>
+					<%
+						} else {
+					%><option value='<%=search.getString("dept_no")%>'><%=search.getString("dept_no")%>
+					</option>
+					<%
+						}
+					}
+					%>
+				</select>
+				<div class="input-group-append">
+					<button type="submit" class="btn btn-primary">검색</button>
+				</div>	
+			</div>
+		</form>
+	</div>
+	<div class="text-center" style="margin-top: 30px;" >
 	<%
 		//첫번째 나오는 숫자
 	int showpage;
@@ -207,15 +225,10 @@
 	
 	<!-- 페이지 숫자가 첫번째로 표시되는 페이지로 이동 -->
 	
-	<a href="./deptEmpList.jsp?currentPage=<%=1%>&check=<%=check%>&deptNo=<%=deptNo%>">처음</a>
-	<a href="./deptEmpList.jsp?currentPage=<%=showpage - rowPerPage%>&check=<%=check%>&deptNo=<%=deptNo%>">이전</a>
+	<a class="btn btn-info" href="./deptEmpList.jsp?currentPage=<%=1%>&check=<%=check%>&deptNo=<%=deptNo%>">처음</a>
+	<a class="btn btn-info" href="./deptEmpList.jsp?currentPage=<%=showpage - rowPerPage%>&check=<%=check%>&deptNo=<%=deptNo%>">이전</a>
 	<%
-		} else if (currentPage <= 10 && currentPage > 1) { //페이지 숫자가 10 밑이면 첫번째 페이지로 이동
-	%>
-
-
-	<a href="./deptEmpList.jsp?currentPage=<%=showpage%>&check=<%=check%>&deptNo=<%=deptNo%>">이전</a>
-	<%
+		
 		}
 
 	//1부터 10까지 출력
@@ -232,7 +245,7 @@
 	%>
 	<!-- 첫번째 숫자 부터 10개 출력 -->
 
-	<a href="./deptEmpList.jsp?currentPage=<%=showpage + i%>&check=<%=check%>&deptNo=<%=deptNo%>"><%=showpage + i%></a>&nbsp;
+	<a class="btn btn-info" href="./deptEmpList.jsp?currentPage=<%=showpage + i%>&check=<%=check%>&deptNo=<%=deptNo%>"><%=showpage + i%></a>&nbsp;
 
 	<%
 		}
@@ -244,15 +257,17 @@
 	<%
 		if (currentPage < lastPage) {
 	%>
-	<a href="./deptEmpList.jsp?currentPage=<%=showpage + rowPerPage%>&check=<%=check%>&deptNo=<%=deptNo%>">다음</a>
+	<a class="btn btn-info" href="./deptEmpList.jsp?currentPage=<%=showpage + rowPerPage%>&check=<%=check%>&deptNo=<%=deptNo%>">다음</a>
 	<%
 		}
 	if (currentPage != lastPage) {
 	%>
 
-	<a href="./deptEmpList.jsp?currentPage=<%=lastPage%>&check=<%=check%>&deptNo=<%=deptNo%>">마지막</a>
+	<a class="btn btn-info" href="./deptEmpList.jsp?currentPage=<%=lastPage%>&check=<%=check%>&deptNo=<%=deptNo%>">마지막</a>
 	<%
 		}
 	%>
+	</div>
+	</div>
 </body>
 </html>

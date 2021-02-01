@@ -6,23 +6,38 @@
 <head>
 <meta charset="UTF-8">
 <title>salaries</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<style type="text/css">
+body{
+	background-color: #EAEAEA;
+}
+thead{
+	background-color: #747474;
+}
+</style>
 </head>
 <body>
 	<!-- 메뉴 -->
-	<div>
-		<table border="1">
-			<tr>
-				<td><a href="./index.jsp">홈으로</a></td>
-				<td><a href="./departmentsList.jsp">departments 테이블 목록</a></td>
-				<td><a href="./deptEmpList.jsp">dept_emp 테이블 목록</a></td>
-				<td><a href="./deptManagerList.jsp">dept_manager 테이블 목록</a></td>
-				<td><a href="./employeesList.jsp">employees 테이블 목록</a></td>
-				<td><a href="./salariesList.jsp">salaries 테이블 목록</a></td>
-				<td><a href="./titlesList.jsp">titles 테이블 목록</a></td>
-			</tr>
-		</table>
-	</div>
-	<h1>salaries 테이블 목록</h1>
+	<div class="container">
+		<div class= "row" style="margin-top: 20px;">
+			<div class="col-3">
+				<h1>employees</h1>
+			</div>
+			<div class="col-9">
+				<table class="table table-borderless text-center">
+					<tr>
+						<td><a class="btn btn-outline-secondary" href="./index.jsp">home</a></td>
+						<td><a class="btn btn-outline-secondary" href="./departmentsList.jsp">departments</a></td>
+						<td><a class="btn btn-outline-secondary" href="./deptEmpList.jsp">dept_emp</a></td>
+						<td><a class="btn btn-outline-secondary" href="./deptManagerList.jsp">dept_manager</a></td>
+						<td><a class="btn btn-outline-secondary" href="./employeesList.jsp">employees</a></td>
+						<td><a class="btn btn-outline-secondary" href="./salariesList.jsp">salaries</a></td>
+						<td><a class="btn btn-outline-secondary" href="./titlesList.jsp">titles</a></td>
+					</tr>
+				</table>
+			</div>
+		</div>
+	<div class="text-center" style="font-size: 30px;"><h1>salaries 테이블 목록</h1></div>
 	<% //한글로 변환
 		request.setCharacterEncoding("UTF-8");
 	int currentPage = 1; //현재 페이지
@@ -39,7 +54,7 @@
 	}
 	//db접속
 	Class.forName("org.mariadb.jdbc.Driver");
-	Connection conn = DriverManager.getConnection("jdbc:mariadb://127.0.0.1:3306/employees", "root", "java1004");
+	Connection conn = DriverManager.getConnection("jdbc:mariadb://kdi0905.kro.kr/employees", "root", "java1004");
 	String sql = "";	// 처음 sql
 	String sql2 = ""; // 마지막 페이지 sql
 	//max 값 구하기
@@ -85,13 +100,13 @@
 	}
 	%>
 	<!-- 테이블 생성 -->
-	<table border="1">
+	<table class="table table-bordered table-hover table-striped text-center ">
 		<thead>
 			<tr>
-				<td>emp_no</td>
-				<td>salary</td>
-				<td>from_date</td>
-				<td>to_date</td>
+				<td class="text-light">emp_no</td>
+				<td class="text-light">salary</td>
+				<td class="text-light">from_date</td>
+				<td class="text-light">to_date</td>
 			</tr>
 		</thead>
 		<tbody>
@@ -110,50 +125,57 @@
 		</tbody>
 	</table>
 	<!-- 연봉검색  -->
+	<div class="text-center col-6" style="margin: auto;">
 	<form method="post" action="./salariesList.jsp">
-		<select name="beginSalary">
-			<%//연봉 검색을 만단위로 표시	
-				for (int i = 0; i < maxSalary; i = i + 10000) {
-				if (beginSalary == i) {
-			%>
-			<option value=<%=i%> selected="selected"><%=beginSalary%></option>
-			<%
-				} else {
-			%>
-			<option value=<%=i%>><%=i%></option>
-			<%
+		<div class="input-group">
+			<select  class="form-control" name="beginSalary">
+				<%//연봉 검색을 만단위로 표시	
+					for (int i = 0; i < maxSalary; i = i + 10000) {
+					if (beginSalary == i) {
+				%>
+				<option value=<%=i%> selected="selected"><%=beginSalary%></option>
+				<%
+					} else {
+				%>
+				<option value=<%=i%>><%=i%></option>
+				<%
+					}
 				}
-			}
-			%>
-
-		</select>
-		~ 
-		<!-- ~까지 연봉 검색 -->
-		<select name="endSalary">
-			<%	
-				for (int i = maxSalary; i >= 0; i = i - 10000) {
-					//연봉 검색을 만단위로 표시	
+				%>
+	
+			</select>
+			<span style="font-size: 20px;"> ~ </span> 
+			<!-- ~까지 연봉 검색 -->
+			<select  class="form-control" name="endSalary">
+				<%	
+					for (int i = maxSalary; i >= 0; i = i - 10000) {
+						//연봉 검색을 만단위로 표시	
+						if(i>=maxSalary-10000){
+							%><option value=<%=i%>><%=i%></option><%
+							i=i/10000*10000;
+						}
+					if (endSalary == i) {
+				%>
+				<option value=<%=i%> selected="selected"><%=endSalary%></option>
+				<%
+					} else {
+				%>
+				<option value=<%=i%>><%=i%></option>
+				<%
+					}
 					if(i>=maxSalary-10000){
-						%><option value=<%=i%>><%=i%></option><%
 						i=i/10000*10000;
 					}
-				if (endSalary == i) {
-			%>
-			<option value=<%=i%> selected="selected"><%=endSalary%></option>
-			<%
-				} else {
-			%>
-			<option value=<%=i%>><%=i%></option>
-			<%
 				}
-				if(i>=maxSalary-10000){
-					i=i/10000*10000;
-				}
-			}
-			%>
-		</select>
-		<button type="submit">검색</button>
+				%>
+			</select>
+			<div class="input-group-append">
+				<button type="submit" class="btn btn-primary">검색</button>
+			</div>
+		</div>
 	</form>
+	</div>
+	<div class="text-center" style="margin-top: 30px; font-size: 60%;" >
 	<%
 		
 	int showpage; //페이지의 첫번째 나오는 숫자구하기
@@ -163,36 +185,24 @@
 	} else {
 		showpage = currentPage / showpageCount * showpageCount + 1;
 	}
-	if (currentPage != 1) {
+	if (currentPage > rowPerPage) {
 	%>
 	<!-- 처음으로 이동 -->
-	<a
+	<a class="btn btn-info"
 		href="./salariesList.jsp?currentPage=<%=1%>&beginSalary=<%=beginSalary%>&endSalary=<%=endSalary%>">처음</a>
-	<%
-		}
-	if (currentPage > showpageCount) {
-	%>
-	<!-- 페이지 숫자가 첫번째로 표시되는 페이지로 이동 -->
-	<a
+		<a class="btn btn-info"
 	
 		href="./salariesList.jsp?currentPage=<%=showpage - rowPerPage%>&beginSalary=<%=beginSalary%>&endSalary=<%=endSalary%>">이전</a>
 	<%
-		} else if (currentPage <= 10 && currentPage > 1) { //페이지 숫자가 10 밑이면 첫번째 페이지로 이동
-	%>
-
-
-	<a
-		href="./salariesList.jsp?currentPage=<%=showpage%>&beginSalary=<%=beginSalary%>&endSalary=<%=endSalary%>">이전</a>
-	<%
 		}
-	%>
-	<%
+	
+	
 		for (int i = 0; i < showpageCount; i++) {
 		if (showpage + i <= lastPage) {
 	%>
 	<!-- 페이지 첫번째 숫자 부터 10개 출력 -->
 
-	<a
+	<a class="btn btn-info"
 		href="./salariesList.jsp?currentPage=<%=showpage + i%>&beginSalary=<%=beginSalary%>&endSalary=<%=endSalary%>"><%=showpage + i%></a>&nbsp;
 	<%
 		}
@@ -204,17 +214,19 @@
 	<%
 		if (currentPage < lastPage) {
 	%>
-	<a
+	<a class="btn btn-info"
 		href="./salariesList.jsp?currentPage=<%=showpage + rowPerPage%>&beginSalary=<%=beginSalary%>&endSalary=<%=endSalary%>">다음</a>
 	<%
 		}
 	// 마지막 페이지로 이동
 	if (currentPage != lastPage) {
 	%>
-	<a
+	<a class="btn btn-info"
 		href="./salariesList.jsp?currentPage=<%=lastPage%>&beginSalary=<%=beginSalary%>&endSalary=<%=endSalary%>">마지막</a>
 	<%
 		}
 	%>
+	</div>
+	</div>
 </body>
 </html>

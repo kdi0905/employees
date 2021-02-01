@@ -6,22 +6,37 @@
 <head>
 <meta charset="EUC-KR">
 <title>dept_manager</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<style type="text/css">
+body{
+	background-color: #EAEAEA;
+}
+thead{
+	background-color: #747474;
+}
+</style>
 </head>
 <body>
 	<!-- 메뉴 -->
-	<div>
-		<table border="1">
-			<tr>
-				<td><a href="./index.jsp">홈으로</a></td>
-				<td><a href="./departmentsList.jsp">departments 테이블 목록</a></td>
-				<td><a href="./deptEmpList.jsp">dept_emp 테이블 목록</a></td>
-				<td><a href="./deptManagerList.jsp">dept_manager 테이블 목록</a></td>
-				<td><a href="./employeesList.jsp">employees 테이블 목록</a></td>
-				<td><a href="./salariesList.jsp">salaries 테이블 목록</a></td>
-				<td><a href="./titlesList.jsp">titles 테이블 목록</a></td>
-			</tr>
-		</table>
-	</div>
+		<div class="container">
+		<div class= "row" style="margin-top: 20px;">
+			<div class="col-3">
+				<h1>employees</h1>
+			</div>
+			<div class="col-9">
+				<table class="table table-borderless text-center">
+					<tr>
+						<td><a class="btn btn-outline-secondary" href="./index.jsp">home</a></td>
+						<td><a class="btn btn-outline-secondary" href="./departmentsList.jsp">departments</a></td>
+						<td><a class="btn btn-outline-secondary" href="./deptEmpList.jsp">dept_emp</a></td>
+						<td><a class="btn btn-outline-secondary" href="./deptManagerList.jsp">dept_manager</a></td>
+						<td><a class="btn btn-outline-secondary" href="./employeesList.jsp">employees</a></td>
+						<td><a class="btn btn-outline-secondary" href="./salariesList.jsp">salaries</a></td>
+						<td><a class="btn btn-outline-secondary" href="./titlesList.jsp">titles</a></td>
+					</tr>
+				</table>
+			</div>
+		</div>
 	<%
 		int currentPage = 1;
 	if (request.getParameter("currentPage") != null) {
@@ -29,23 +44,23 @@
 	}
 	int rowPerPage = 10;
 	%>
-	<h1>dept_manager 테이블 목록</h1>
+	<div class="text-center" style="font-size: 30px;"><h1>dept_manager 테이블 목록</h1></div>
 	<%
 		Class.forName("org.mariadb.jdbc.Driver");
-	Connection conn = DriverManager.getConnection("jdbc:mariadb://127.0.0.1:3306/employees", "root", "java1004");
+	Connection conn = DriverManager.getConnection("jdbc:mariadb://kdi0905.kro.kr/employees", "root", "java1004");
 	String sql = "select * from dept_manager order by dept_no asc limit ?,?";
 	PreparedStatement stmt = conn.prepareStatement(sql);
 	stmt.setInt(1, (currentPage - 1) * rowPerPage);
 	stmt.setInt(2, rowPerPage);
 	ResultSet rs = stmt.executeQuery();
 	%>
-	<table border="1">
+	<table class="table table-bordered table-hover table-striped text-center ">
 		<thead>
 			<tr>
-				<td>dept_no</td>
-				<td>emp_no</td>
-				<td>from_date</td>
-				<td>to_date</td>
+				<td class="text-light">dept_no</td>
+				<td class="text-light">emp_no</td>
+				<td class="text-light">from_date</td>
+				<td class="text-light">to_date</td>
 			</tr>
 		</thead>
 		<tbody>
@@ -63,6 +78,7 @@
 			%>
 		</tbody>
 	</table>
+	<div class="text-center" style="margin-top: 30px;" >
 	<%
 		//첫번째 나오는 숫자
 	int showpage;
@@ -75,18 +91,11 @@
 	if (currentPage > rowPerPage) {
 	%>
 	<!-- 페이지 숫자가 첫번째로 표시되는 페이지로 이동 -->
-	<a href="./deptManagerList.jsp?currentPage=<%=1%>">처음</a>
-	<a
+	<a class="btn btn-info" href="./deptManagerList.jsp?currentPage=<%=1%>">처음</a>
+	<a class="btn btn-info"
 		href="./deptManagerList.jsp?currentPage=<%= showpage - rowPerPage%>">이전</a>
 	<%
-		} else if (currentPage <= 10 && currentPage > 1) { //페이지 숫자가 10 밑이면 첫번째 페이지로 이동
-	%>
-
-
-	<a href="./deptManagerList.jsp?currentPage=<%= showpage%>">이전</a>
-	<%
-		} else {
-	%>이전<%
+		
 		}
 	//1부터 10까지 출력
 	//11부터 20까지 출력
@@ -108,14 +117,14 @@
 	}
 
 	for (int i = 0; i < rowPerPage; i++) {
-	if (currentPage <= lastPage) {
+	if (showpage + i <= lastPage) {
 	%>
 	<!-- 첫번째 숫자 부터 10개 출력 -->
 
-	<a href="./deptManagerList.jsp?currentPage=<%=showpage + i%>"><%=showpage + i%></a>&nbsp;
+	<a class="btn btn-info" href="./deptManagerList.jsp?currentPage=<%=showpage + i%>"><%=showpage + i%></a>&nbsp;
 	<%
-		currentPage++;
-	}
+		
+		}
 	}
 	%>
 
@@ -124,15 +133,17 @@
 	<%
 		if (currentPage < lastPage) {
 	%>
-	<a href="./deptManagerList.jsp?currentPage=<%=showpage + rowPerPage%>">다음</a>
+	<a class="btn btn-info" href="./deptManagerList.jsp?currentPage=<%=showpage + rowPerPage%>">다음</a>
 	<%
-		} else {
+		}
+	if (currentPage != lastPage) {
 	%>
-	다음
+	
+	<a class="btn btn-info" href="./deptManagerList.jsp?currentPage=<%=lastPage%>">마지막</a>
 	<%
 		}
 	%>
-	
-	<a href="./deptManagerList.jsp?currentPage=<%=lastPage%>">마지막</a>
+	</div>
+	</div>
 </body>
 </html>
